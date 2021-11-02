@@ -22,7 +22,13 @@ router.use((request,response,next)=>{
 router.route('/sensors').get((request,response)=>{
 
     dboperations.getOrders().then(result => {
-       response.json(result[0]);
+	   if (result[0].length) {		
+       response.json({"message":"success", "status": 200, "data":result[0]});
+	   } else {
+		   response.status(500).json({
+          "status": 500, message: "Some error occurred while retrieving sensors"
+        });
+	   }
     })
 
 })
@@ -30,7 +36,14 @@ router.route('/sensors').get((request,response)=>{
 router.route('/sensors/:id').get((request,response)=>{
 
     dboperations.getOrder(request.params.id).then(result => {
-       response.json(result[0]);
+	   if (result[0].length) {
+		response.json({"message":"success", "status": 200, "data":result[0]});
+      } else {
+        response.status(404).json({
+          "status": 404, message: "Cannot find Sensors."
+        });
+	  }
+       
     })
 
 })
@@ -40,7 +53,13 @@ router.route('/sensors').post((request,response)=>{
     let order = {...request.body}
 
     dboperations.addOrder(order).then(result => {
-       response.status(200).json(result);
+	   if (result) {
+		response.json({"message":"Sensors was inserted successfully", "status": 200});
+      } else {
+        response.status(404).json({
+          "status": 404, message: "Cannot insert Sensors!"
+        });
+	  }
     })
 
 })
@@ -50,7 +69,13 @@ router.route('/sensors/:id').put((request,response)=>{
     let order = {...request.body}
 
     dboperations.updateOrder(order, request.params.id).then(result => {
-       response.status(200).json(result);
+       if (result) {
+		response.json({"message":"Sensors was updated successfully", "status": 200, "data":result});
+      } else {
+        response.status(404).json({
+          "status": 404, message: "Cannot update Sensors. Maybe Sensors was not found or req.body is empty!"
+        });
+	  }
     })
 
 })
@@ -60,7 +85,13 @@ router.route('/sensors/:id').patch((request,response)=>{
     let order = {...request.body}
 
     dboperations.patchOrder(order, request.params.id).then(result => {
-       response.status(200).json(result);
+       if (result) {
+		response.json({"message":"Sensors was updated successfully", "status": 200, "data":result});
+      } else {
+        response.status(404).json({
+          "status": 404, message: "Cannot update Sensors. Maybe Sensors was not found or req.body is empty!"
+        });
+	  }
     })
 
 })
@@ -69,7 +100,13 @@ router.route('/sensors/:id').delete((request,response)=>{
 
 
     dboperations.deleteOrder(request.params.id).then(result => {
-       response.status(200).json(result);
+       if (result) {
+		response.json({"message":"Sensors was deleted successfully!", "status": 200, "data":result});
+      } else {
+        response.status(404).json({
+          "status": 404, message: "Cannot delete Sensors. Maybe Sensors was not found!"
+        });
+	  }
     })
 
 })

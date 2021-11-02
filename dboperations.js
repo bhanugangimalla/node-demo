@@ -10,6 +10,10 @@ async function getOrders() {
     }
     catch (error) {
         console.log(error);
+		 if (error) {
+          res.status(500).json({"error":error.message || "Some error occurred while retrieving sensors."});
+          return;
+        }
     }
 }
 
@@ -24,6 +28,10 @@ async function getOrder(orderId) {
     }
     catch (error) {
         console.log(error);
+		 if (error) {
+          res.status(500).json({"error":error.message || "Error retrieving Sensors."});
+          return;
+		 }
     }
 }
 
@@ -61,12 +69,14 @@ async function updateOrder(order, orderId) {
 async function patchOrder(order, orderId) {
 
     try {
-		console.info('order.........', order)
-		console.info('order.........orderId....', orderId)
+		let patchQuery = "";
+		for(let i=0;i<Object.keys(order).length;i++) {
+			
+		}
         let pool = await sql.connect(config);
         let updateProduct = await pool.request()
 			.input('input_parameter', sql.Int, orderId)
-			.query("UPDATE [dbo].[Sensors] set SensorName = COALESCE(?,SensorName), Unit = COALESCE(?,Unit), LocationName = COALESCE(?,LocationName), Temperature = COALESCE(?,Temperature), Humidity = COALESCE(?,Humidity) WHERE Id = ?",[order.SensorName, order.Unit, order.LocationName, order.Temperature, order.Humidity, orderId])
+			.query("UPDATE [dbo].[Sensors] SET 'SensorName='"+order.SensorName+"'', Unit='"+order.Unit+"', LocationName='"+order.LocationName+"', Temperature='"+order.Temperature+"', Humidity='"+order.Humidity+"' WHERE Id= @input_parameter")
         return updateProduct.recordsets;
     }
     catch (err) {
