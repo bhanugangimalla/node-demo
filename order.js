@@ -1,10 +1,11 @@
 class Order{
-    constructor(CustomerID,FirstName,CompanyName,Phone,EmailAddress){
-        this.CustomerID = CustomerID; 
-        this.FirstName = FirstName; 
-        this.CompanyName = CompanyName;
-        this.Phone = Phone;
-        this.EmailAddress = EmailAddress; 
+    constructor(Id,SensorName,Unit,LocationName,Temperature,Humidity){
+        this.Id = Id; 
+        this.SensorName = SensorName; 
+        this.Unit = Unit;
+		this.LocationName = LocationName;
+        this.Temperature = Temperature;
+        this.Humidity = Humidity; 
     }
 }
 

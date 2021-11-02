@@ -1,8 +1,3 @@
-/* const express = require('express');
-const app  = express();
-var port = process.env.PORT || 5000;
-app.get('/', (req, res) => res.send('Hello World'));
-app.listen(port, () => console.log('Server is running on port '+ port)); */
 var Db  = require('./dboperations');
 var Order = require('./order');
 const dboperations = require('./dboperations');
@@ -24,7 +19,7 @@ router.use((request,response,next)=>{
    next();
 })
 
-router.route('/orders').get((request,response)=>{
+router.route('/sensors').get((request,response)=>{
 
     dboperations.getOrders().then(result => {
        response.json(result[0]);
@@ -32,7 +27,7 @@ router.route('/orders').get((request,response)=>{
 
 })
 
-router.route('/orders/:id').get((request,response)=>{
+router.route('/sensors/:id').get((request,response)=>{
 
     dboperations.getOrder(request.params.id).then(result => {
        response.json(result[0]);
@@ -40,12 +35,41 @@ router.route('/orders/:id').get((request,response)=>{
 
 })
 
-router.route('/orders').post((request,response)=>{
+router.route('/sensors').post((request,response)=>{
 
     let order = {...request.body}
 
     dboperations.addOrder(order).then(result => {
-       response.status(201).json(result);
+       response.status(200).json(result);
+    })
+
+})
+
+router.route('/sensors/:id').put((request,response)=>{
+
+    let order = {...request.body}
+
+    dboperations.updateOrder(order, request.params.id).then(result => {
+       response.status(200).json(result);
+    })
+
+})
+
+router.route('/sensors/:id').patch((request,response)=>{
+
+    let order = {...request.body}
+
+    dboperations.patchOrder(order, request.params.id).then(result => {
+       response.status(200).json(result);
+    })
+
+})
+
+router.route('/sensors/:id').delete((request,response)=>{
+
+
+    dboperations.deleteOrder(request.params.id).then(result => {
+       response.status(200).json(result);
     })
 
 })
