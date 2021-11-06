@@ -67,7 +67,7 @@ router.route('/sensors').post((request,response)=>{
 router.route('/sensors/:id').put((request,response)=>{
 
     let order = {...request.body}
-
+	
     dboperations.updateOrder(order, request.params.id).then(result => {
        if (result) {
 		response.json({"message":"Sensors was updated successfully", "status": 200, "data":result});

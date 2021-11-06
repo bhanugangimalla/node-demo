@@ -5,7 +5,7 @@ const sql = require('mssql');
 async function getOrders() {
     try {
         let pool = await sql.connect(config);
-        let products = await pool.request().query("SELECT * from [dbo].[Sensors]");
+        let products = await pool.request().query("SELECT * from [dbo].[EventHubData]");
         return products.recordsets;
     }
     catch (error) {
@@ -22,7 +22,7 @@ async function getOrder(orderId) {
         let pool = await sql.connect(config);
         let product = await pool.request()
             .input('input_parameter', sql.Int, orderId)
-            .query("SELECT * from [dbo].[Sensors] where Id = @input_parameter");
+            .query("SELECT * from [dbo].[EventHubData] where messageId = @input_parameter");
         return product.recordsets;
 
     }
@@ -40,7 +40,7 @@ async function addOrder(order) {
     try {
         let pool = await sql.connect(config);
         let insertProduct = await pool.request()
-			.query("INSERT INTO [dbo].[Sensors](SensorName, Unit, LocationName, Temperature, Humidity) VALUES ('"+order.SensorName+"','"+order.Unit+"','"+order.LocationName+"','"+order.Temperature+"', '"+order.Humidity+"')")
+			.query("INSERT INTO [dbo].[EventHubData](messageId, deviceId, temperature, humidity, EventProcessedUtcTime, PartitionId) VALUES ('"+order.messageId+"','"+order.deviceId+"','"+order.temperature+"','"+order.humidity+"', '"+order.EventProcessedUtcTime+"', '"+order.PartitionId+"')")
         return insertProduct.recordsets;
     }
     catch (err) {
@@ -57,7 +57,7 @@ async function updateOrder(order, orderId) {
         let pool = await sql.connect(config);
         let updateProduct = await pool.request()
 			.input('input_parameter', sql.Int, orderId)
-			.query("UPDATE [dbo].[Sensors] SET SensorName='"+order.SensorName+"', Unit='"+order.Unit+"', LocationName='"+order.LocationName+"', Temperature='"+order.Temperature+"', Humidity='"+order.Humidity+"' WHERE Id= @input_parameter")
+			.query("UPDATE [dbo].[EventHubData] SET messageId='"+order.messageId+"', deviceId='"+order.deviceId+"', temperature='"+order.temperature+"', humidity='"+order.humidity+"', EventProcessedUtcTime='"+order.EventProcessedUtcTime+"',PartitionId='"+order.PartitionId+"'  WHERE messageId= @input_parameter")
         return updateProduct.recordsets;
     }
     catch (err) {
@@ -76,7 +76,7 @@ async function patchOrder(order, orderId) {
         let pool = await sql.connect(config);
         let updateProduct = await pool.request()
 			.input('input_parameter', sql.Int, orderId)
-			.query("UPDATE [dbo].[Sensors] SET 'SensorName='"+order.SensorName+"'', Unit='"+order.Unit+"', LocationName='"+order.LocationName+"', Temperature='"+order.Temperature+"', Humidity='"+order.Humidity+"' WHERE Id= @input_parameter")
+			.query("UPDATE [dbo].[EventHubData] SET messageId='"+order.messageId+"', deviceId='"+order.deviceId+"', temperature='"+order.temperature+"', humidity='"+order.humidity+"', EventProcessedUtcTime='"+order.EventProcessedUtcTime+"',PartitionId='"+order.PartitionId+"'   WHERE messageId= @input_parameter")
         return updateProduct.recordsets;
     }
     catch (err) {
@@ -93,7 +93,7 @@ async function deleteOrder(orderId) {
         let pool = await sql.connect(config);
         let updateProduct = await pool.request()
 			.input('input_parameter', sql.Int, orderId)
-			.query("DELETE FROM [dbo].[Sensors] WHERE Id= @input_parameter")
+			.query("DELETE FROM [dbo].[EventHubData] WHERE messageId= @input_parameter")
         return updateProduct.recordsets;
     }
     catch (err) {
